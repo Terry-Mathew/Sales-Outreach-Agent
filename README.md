@@ -1,67 +1,293 @@
-# TMP AI Sales Outreach Agent
+# 🚀 TMP AI Sales Outreach Agent
 
-**An intelligent, agentic workflow for generating high-performance cold outreach emails.**
+**An intelligent, multi-agent system for generating high-performance cold outreach emails.**
 
-This project uses a multi-agent system to draft, evaluate, and optimize sales emails. Instead of relying on a single prompt, it orchestrates three distinct AI personas to generate options, then uses a **Hybrid Scoring System** (Rule-Based + LLM Judge) to mathematically determine the best draft.
+This project uses a sophisticated multi-agent architecture to draft, evaluate, and optimize sales emails. Instead of relying on a single prompt, it orchestrates **three distinct AI personas** to generate options, then uses a **Hybrid Scoring System** (Rule-Based + LLM Judge) to mathematically determine the best draft.
 
-## 🚀 Key Features
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Python](https://img.shields.io/badge/python-3.10+-green)
+![License](https://img.shields.io/badge/license-MIT-purple)
 
-*   **Multi-Persona Generation**: Simultaneously generates drafts using three specialized agents:
-    *   **👔 Professional**: Focuses on value, efficiency, and ROI.
-    *   **💡 Engaging**: Uses pattern interrupts, humor, and a conversational tone.
-    *   **⚡ Concise**: Ultra-short, bullet-point style for busy executives.
-*   **Hybrid Scoring Engine**:
-    *   **Rule-Based**: Checks for objective metrics like word count, "you" vs "I" ratio, value keywords, and formatting.
-    *   **LLM Judge**: A separate agent evaluates persuasiveness, tone, and clarity.
-*   **Cost Tracking**: Monitors and analyzes the estimated API cost per run.
-*   **Interactive UI**: Built with **Gradio** for a clean, card-based user interface to test and display results.
+---
+
+## ✨ Key Features
+
+### 🤖 Multi-Persona Generation
+Simultaneously generates drafts using three specialized SDR agents:
+
+| Agent | Style | Best For |
+|-------|-------|----------|
+| **👔 Professional** | Value-focused, ROI-driven | C-suite, Enterprise |
+| **💡 Engaging** | Pattern interrupts, conversational | Startups, Marketing |
+| **⚡ Concise** | Ultra-brief, bullet-point | Busy executives |
+
+### 📊 Hybrid Scoring Engine
+- **Rule-Based (40%)**: Checks length, structure, keywords, spam triggers, CTA quality
+- **LLM Judge (60%)**: Evaluates persuasiveness, tone, clarity, personalization
+- **Improvement Suggestions**: Actionable feedback for each draft
+
+### 🎯 Professional-Grade Prompts
+World-class prompt engineering using:
+- Rich persona with motivation & goals
+- Chain-of-thought reasoning framework
+- Few-shot examples (good & bad)
+- Negative constraints (what to avoid)
+- Dynamic context injection
+
+### 🔧 Production-Ready Architecture
+- Pydantic settings with validation
+- Structured logging
+- Cost tracking per run
+- Memory persistence for learning
+- Comprehensive test suite
+
+---
+
+## 📁 Project Structure
+
+```
+Sales-Outreach-Agent/
+├── config/                    # Configuration
+│   ├── settings.py           # Pydantic settings with validation
+│   └── prompts/              # Externalized prompt templates
+│       ├── professional_sdr.md
+│       ├── engaging_sdr.md
+│       ├── concise_sdr.md
+│       └── email_judge.md
+│
+├── src/                       # Source code
+│   ├── agents/               # Agent definitions
+│   │   ├── sdr_agents.py     # SDR personas
+│   │   ├── judge_agent.py    # Email evaluator
+│   │   └── subject_agent.py  # Subject line generator
+│   │
+│   ├── scoring/              # Scoring logic
+│   │   ├── rule_scorer.py    # Rule-based scoring
+│   │   ├── llm_scorer.py     # LLM-based scoring
+│   │   └── hybrid_scorer.py  # Combined scoring
+│   │
+│   ├── pipeline/             # Orchestration
+│   │   └── orchestrator.py   # Main pipeline
+│   │
+│   └── utils/                # Utilities
+│       ├── cost_tracker.py   # API cost tracking
+│       ├── cache.py          # Response caching
+│       ├── memory.py         # Agent memory
+│       └── logging.py        # Structured logging
+│
+├── app/                       # Application layer
+│   ├── gradio_app.py         # Web UI
+│   └── api.py                # REST API
+│
+├── tests/                     # Test suite
+│   ├── test_scoring.py
+│   └── test_settings.py
+│
+├── main.py                    # Entry point
+├── .env.example              # Environment template
+└── requirements.txt          # Dependencies
+```
+
+---
 
 ## 🛠️ Installation
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/Terry-Mathew/Sales-Outreach-Agent.git
-    cd Sales-Outreach-Agent
-    ```
+### 1. Clone the repository
 
-2.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+git clone https://github.com/Terry-Mathew/Sales-Outreach-Agent.git
+cd Sales-Outreach-Agent
+```
 
-3.  **Set up Environment Variables:**
-    Create a `.env` file in the root directory and add your OpenAI API key:
-    ```env
-    OPENAI_API_KEY=sk-...
-    ```
+### 2. Create virtual environment
+
+```bash
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# macOS/Linux
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configure environment
+
+```bash
+# Copy the example env file
+cp .env.example .env
+
+# Edit .env and add your OpenAI API key
+# OPENAI_API_KEY=sk-...
+```
+
+---
 
 ## 🖥️ Usage
 
-Run the Gradio application:
+### Gradio Web UI (Default)
 
 ```bash
-python app.py
+python main.py
 ```
 
-Open the provided local URL (usually `http://127.0.0.1:7860`) in your browser.
+Open http://localhost:7860 in your browser.
 
-1.  Enter a description of your prospect (e.g., *"CEO of a marketing agency looking to automate workflows"*).
-2.  Click **Generate Emails**.
-3.  The system will display the **winning draft**, along with the scores and content for all generated options.
+### REST API
 
-## 📂 Project Structure
+```bash
+python main.py --api
+```
 
-*   `app.py`: The entry point. Handles the Gradio UI and invokes the agent pipeline.
-*   `tmpai_sales_agent.py`: Contains the core logic:
-    *   Agent definitions (Professional, Engaging, Concise).
-    *   `QualityScorer` class (Rule-based logic).
-    *   `email_judge` (LLM evaluator).
-    *   Orchestration logic (`run_tmpai_sales`).
-*   `requirements.txt`: Python dependencies.
+API docs available at http://localhost:8000/docs
+
+### CLI Options
+
+```bash
+python main.py --help
+
+Options:
+  --api           Run FastAPI server instead of Gradio UI
+  --port PORT     Custom port (default: 7860 for Gradio, 8000 for API)
+  --share         Create a public Gradio share link
+  --reload        Enable auto-reload for development (API only)
+```
+
+---
+
+## 🔧 Configuration
+
+All settings can be configured via environment variables or `.env` file:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OPENAI_API_KEY` | *required* | Your OpenAI API key |
+| `PRIMARY_MODEL` | `gpt-4o-mini` | Model for SDR agents |
+| `JUDGE_MODEL` | `gpt-4o-mini` | Model for email evaluation |
+| `RULE_SCORE_WEIGHT` | `0.40` | Weight for rule-based scoring |
+| `LLM_SCORE_WEIGHT` | `0.60` | Weight for LLM scoring |
+| `MAX_COST_PER_RUN` | `0.50` | Budget limit per run (USD) |
+| `LOG_LEVEL` | `INFO` | Logging level |
+| `COMPANY_NAME` | `TMP AI Consulting` | Your company name for emails |
+
+See `.env.example` for the full list of options.
+
+---
+
+## 📡 API Endpoints
+
+### Generate Emails
+
+```http
+POST /generate
+Content-Type: application/json
+
+{
+  "prospect_description": "CEO of a 50-person marketing agency...",
+  "generate_subjects": true
+}
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "chosen_agent": "Professional",
+  "winning_score": 85,
+  "winning_subject": "Quick thought on your marketing automation",
+  "winning_body": "Hi Marcus...",
+  "all_drafts": [...],
+  "costs": {
+    "api_calls": 7,
+    "estimated_cost_usd": 0.014
+  }
+}
+```
+
+### Other Endpoints
+
+- `GET /health` - Health check
+- `GET /agents` - List available SDR personas
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=src
+
+# Run specific test file
+pytest tests/test_scoring.py -v
+```
+
+---
 
 ## 🧠 How It Works
 
-1.  **Drafting**: The Orchestrator sends the prompt to all three SDR Agents in parallel.
-2.  **Rule Scoring**: Each draft is analyzed for structure, length, and keywords using Python logic.
-3.  **LLM Scoring**: The "Search & Judge" agent reviews the draft for qualitative nuances.
-4.  **Selection**: A final weighted score (40% Rules / 60% LLM) determines the winner.
+```mermaid
+graph TD
+    A[Prospect Description] --> B[Orchestrator]
+    B --> C1[Professional Agent]
+    B --> C2[Engaging Agent]
+    B --> C3[Concise Agent]
+    C1 --> D1[Draft 1]
+    C2 --> D2[Draft 2]
+    C3 --> D3[Draft 3]
+    D1 --> E[Subject Generator]
+    D2 --> E
+    D3 --> E
+    E --> F[Hybrid Scorer]
+    F --> G1[Rule Score 40%]
+    F --> G2[LLM Judge 60%]
+    G1 --> H[Final Scores]
+    G2 --> H
+    H --> I[🏆 Winner Selected]
+```
+
+1. **Drafting**: Orchestrator sends prompt to all three SDR agents in parallel
+2. **Subject Generation**: Each draft gets an optimized subject line
+3. **Rule Scoring**: Python logic analyzes structure, length, keywords, spam triggers
+4. **LLM Scoring**: Judge agent evaluates persuasiveness, tone, clarity
+5. **Selection**: Weighted score (40% rules + 60% LLM) determines winner
+
+---
+
+## 📈 Roadmap
+
+- [ ] Add A/B testing for subject lines
+- [ ] Integrate with CRM systems (HubSpot, Salesforce)
+- [ ] Email sequence generation (multi-touch campaigns)
+- [ ] Prospect research agent (LinkedIn, company website)
+- [ ] Response prediction scoring
+- [ ] Fine-tuned models for specific industries
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Built with [OpenAI Agents SDK](https://github.com/openai/openai-agents)
+- UI powered by [Gradio](https://gradio.app/)
+- API powered by [FastAPI](https://fastapi.tiangolo.com/)
